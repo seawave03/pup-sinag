@@ -63,10 +63,7 @@ export default function App() {
 
         {/* Coordinator Routes */}
         
-      <Route path="/coordinator" element={
-  <ProtectedRoute>
-    <CoordinatorD />
-  </ProtectedRoute>
+<Route path="/coordinator" element={<ProtectedRoute><CoordinatorD /></ProtectedRoute>
 }>
   <Route path="dashboard" element={<DashboardC />} />
   <Route path="Adviser" element={<AdviserC />} />
@@ -77,7 +74,7 @@ export default function App() {
   <Route path="profile" element={<ProfileC />} />
 </Route>
 
-import ProtectedRoute from './Components/ProtectedRoute';
+
 
 // Adviser Routes
 <Route path="/adviser" element={<ProtectedRoute allowedRoles={['adviser']} />}>
