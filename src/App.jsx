@@ -20,13 +20,10 @@ import ProfileC from './Pages/CoordinatorPages/ProfileC.jsx';
 import DashboardA from './Pages/AdviserPages/DashboardA.jsx';
 import InternA from './Pages/AdviserPages/InternA';
 import CompaniesA from './Pages/AdviserPages/CompaniesA.jsx';
-import ProgramsA from './Pages/AdviserPages/ProgramsA.jsx';
 import ReportsA from './Pages/AdviserPages/ReportsA';
 import ProfileA from './Pages/AdviserPages/ProfileA.jsx'; 
 
-import DashboardI from './Pages/InternPages/DashboardI.jsx';
-import DocumentsI from './Pages/InternPages/DocumentsI.jsx';
-import EvaluationI from './Pages/InternPages/EvaluationI.jsx';
+import HomeI from './Pages/InternPages/HomeI.jsx';
 import ProfileI from './Pages/InternPages/ProfileI.jsx'; 
 
 import DashboardS from './Pages/SupervisorPages/DashboardS.jsx';
@@ -77,34 +74,28 @@ export default function App() {
 
 
 // Adviser Routes
-<Route path="/adviser" element={<ProtectedRoute allowedRoles={['adviser']} />}>
-  <Route element={<AdviserD />}>
+<Route path="/adviser" element={<ProtectedRoute ><AdviserD /></ProtectedRoute>
+}>
     <Route path="dashboard" element={<DashboardA />} />
     <Route path="interns" element={<InternA />} />
     <Route path="companies" element={<CompaniesA />} />
-    <Route path="programs" element={<ProgramsA />} />
     <Route path="reports" element={<ReportsA />} />
     <Route path="profile" element={<ProfileA />} />
-  </Route>
 </Route>  
 
 // Intern Routes
-<Route path="/intern" element={<ProtectedRoute allowedRoles={['intern']} />}>
-  <Route element={<InternD />}>
-    <Route path="dashboard" element={<DashboardI />} />
-    <Route path="documents" element={<DocumentsI />} />
-    <Route path="evaluation" element={<EvaluationI />} />
+<Route path="/intern" element={<ProtectedRoute ><InternD /></ProtectedRoute>
+  }>
+    <Route path="home" element={<HomeI />} />
     <Route path="profile" element={<ProfileI />} />
-  </Route>
 </Route>
 
 // Supervisor Routes
-<Route path="/supervisor" element={<ProtectedRoute allowedRoles={['supervisor']} />}>
-  <Route element={<SupervisorD />}>
+<Route path="/supervisor" element={<ProtectedRoute ><SupervisorD /></ProtectedRoute>
+}>
     <Route path="dashboard" element={<DashboardS />} />
     <Route path="evaluation" element={<EvaluationS />} />
     <Route path="profile" element={<ProfileS />} />
-  </Route>
 </Route>
 
 

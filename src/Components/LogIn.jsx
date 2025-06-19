@@ -15,13 +15,19 @@ const LogIn = () => {
     );
   }
 
- const handleLogin = (e) => {
-  e.preventDefault();
-  localStorage.setItem('isLoggedIn', 'true');
-  alert(`${capitalize(role)} logged in successfully!`);
-  navigate(`/${role}/dashboard`);
-};
+  const handleLogin = (e) => {
+    e.preventDefault();
+    localStorage.setItem('isLoggedIn', 'true');
+    alert(`${capitalize(role)} logged in successfully!`);
 
+    // --- FIX STARTS HERE ---
+    if (role === 'intern') {
+      navigate('/intern/home'); // Navigate intern to their 'home' route
+    } else {
+      navigate(`/${role}/dashboard`); // Other roles go to their 'dashboard'
+    }
+    // --- FIX ENDS HERE ---
+  };
 
   const capitalize = (str) =>
     str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();

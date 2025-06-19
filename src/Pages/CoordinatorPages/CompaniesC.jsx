@@ -36,10 +36,11 @@ const CompaniesC = () => {
         // TODO: Database Connection Point 2: Remove this mock data and filtering
         // when you uncomment and use your real backend API.
         const mockCompanies = [
-          { no: '001', name: 'AAA', email: 'aaa@gmail.com', supervisor: 'Mrs. Cruz', address: '.st.', moa: '.pdf' },
-          { no: '002', name: 'BBB Corp', email: 'info@bbbcorp.com', supervisor: 'Mr. Smith', address: '123 Main St.', moa: 'bbb_moa.pdf' },
-          { no: '003', name: 'XYZ Innovations', email: 'contact@xyz.net', supervisor: 'Ms. Johnson', address: '456 Oak Ave.', moa: 'xyz_agreement.pdf' },
-          { no: '004', name: 'Global Tech', email: 'support@globaltech.org', supervisor: 'Dr. Lee', address: '789 Pine Ln.', moa: 'global_tech_moa.pdf' },
+          { no: '001', name: 'AAA', email: 'aaa@gmail.com', supervisor: 'Mrs. Cruz', address: '.st.', moa: '.pdf', natureOfBusiness: 'Manufacturing', moaValidity: '3 years' },
+          { no: '002', name: 'BBB Corp', email: 'info@bbbcorp.com', supervisor: 'Mr. Smith', address: '123 Main St.', moa: 'bbb_moa.pdf', natureOfBusiness: 'Corporate', moaValidity: '2 years' },
+          { no: '003', name: 'XYZ Innovations', email: 'contact@xyz.net', supervisor: 'Ms. Johnson', address: '456 Min. Ave.', moa: 'xyz_agreement.pdf', natureOfBusiness: 'Technology', moaValidity: '5 years' },
+          { no: '004', name: 'Global Tech', email: 'support@globaltech.org', supervisor: 'Dr. Lee', address: '789 Lopez Ln.', moa: 'global_tech_moa.pdf', natureOfBusiness: 'IT Services', moaValidity: '1 year' },
+          { no: '005', name: 'Creative Hub', email: 'hello@creativehub.com', supervisor: 'Mr. Davis', address: '101 Que. St.', moa: 'creative_moa.pdf', natureOfBusiness: 'Creative Agency', moaValidity: '2 years' },
         ];
 
         // Simulate network delay
@@ -48,7 +49,10 @@ const CompaniesC = () => {
         // Apply client-side filtering for sample data (REMOVE THIS FOR REAL DB)
         let filteredCompanies = mockCompanies.filter(company => {
           if (searchTerm) {
-            return company.name.toLowerCase().includes(searchTerm.toLowerCase());
+            return (
+              company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              company.natureOfBusiness.toLowerCase().includes(searchTerm.toLowerCase())
+            );
           }
           return true;
         });
@@ -88,8 +92,6 @@ const CompaniesC = () => {
     alert("Functionality to add a new company would go here!");
   };
 
-  // REMOVED: handleBackToHome function is no longer needed.
-
   return (
     <div className="p-5 md:p-8 bg-gray-100 min-h-screen">
       {/* Header and Action Buttons */}
@@ -118,7 +120,7 @@ const CompaniesC = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Company"
+                placeholder="Search company name or nature" 
                 className="pl-4 pr-10 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm w-full"
                 value={searchTerm}
                 onChange={handleSearchChange}
@@ -131,7 +133,6 @@ const CompaniesC = () => {
             </div>
           </div>
         </div>
-        {/* The second row for search input has been removed as it's now aligned with buttons */}
       </div>
 
       {/* Companies Table Container */}
@@ -154,6 +155,12 @@ const CompaniesC = () => {
               <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
                 Address
               </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
+                Nature of Business
+              </th>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
+                MOA Validity
+              </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider rounded-tr-lg">
                 MOA
               </th>
@@ -162,19 +169,22 @@ const CompaniesC = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {loading ? (
               <tr>
-                <td colSpan="6" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                {/* Updated colSpan from 6 to 8 */}
+                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   Loading companies...
                 </td>
               </tr>
             ) : error ? (
               <tr>
-                <td colSpan="6" className="px-6 py-4 whitespace-nowrap text-center text-red-500">
+                {/* Updated colSpan from 6 to 8 */}
+                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-red-500">
                   {error}
                 </td>
               </tr>
             ) : companies.length === 0 ? (
               <tr>
-                <td colSpan="6" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                {/* Updated colSpan from 6 to 8 */}
+                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   No companies found matching your criteria.
                 </td>
               </tr>
@@ -186,6 +196,8 @@ const CompaniesC = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.supervisor}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.address}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.natureOfBusiness}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.moaValidity}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {/* Render MOA as a clickable link if it's a path, or just text */}
                     {company.moa ? (
