@@ -11,26 +11,30 @@ const InternC = () => {
   // Filter states
   const [selectedProgram, setSelectedProgram] = useState('All');
   const [selectedCompany, setSelectedCompany] = useState('All');
-  // NEW STATE: For the Status filter
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // States for sorting
+  const [sortCriteria, setSortCriteria] = useState('lastname'); // Default sort by lastname
+  const [sortOrder, setSortOrder] = useState('asc'); // Default sort order ascending
+
   // Dropdown options (simulated - ideally fetched from DB)
-  // TODO: Database Connection Point 1:
-  // If your program and company options also come from the database,
-  // you would fetch them here using a separate useEffect or at the same time
-  // as the interns data if they are small enough to be bundled.
   const programOptions = ['All', 'BSIT', 'BSBA', 'BSENT', 'BEED', 'IND. ENG.'];
-  const companyOptions = ['All', 'AAA', 'BBB', 'CCC', 'DDD']; // Example company names
-  // NEW OPTION: For the Status filter
-  const statusOptions = ['All', 'Endorsed', 'Pending']; // Example status options
+  const companyOptions = ['All', 'AAA', 'BBB', 'CCC', 'DDD'];
+  const statusOptions = ['All', 'Endorsed', 'Pending', 'Accepted'];
+  const sortOptions = [
+    { label: 'Last Name', value: 'lastname' },
+    { label: 'First Name', value: 'firstname' },
+    { label: 'Student ID', value: 'studNo' },
+  ];
+
 
   // Simulated data fetching from a "database"
   // This useEffect will re-run when filters or search term changes
   useEffect(() => {
     const fetchInterns = async () => {
       setLoading(true); // Set loading to true when fetching starts
-      setError(null);   // Clear any previous errors
+      setError(null);   // Clear any previous errors
 
       try {
         // TODO: Database Connection Point 2: This entire block is commented out for now.
@@ -42,32 +46,35 @@ const InternC = () => {
         // // Construct query parameters based on current filter/search states
         // const params = new URLSearchParams();
         // if (selectedProgram !== 'All') {
-        //   params.append('program', selectedProgram);
+        //   params.append('program', selectedProgram);
         // }
         // if (selectedCompany !== 'All') {
-        //   params.append('company', selectedCompany);
+        //   params.append('company', selectedCompany);
         // }
         // // NEW PARAMETER for backend filter
         // if (selectedStatus !== 'All') {
-        //   params.append('status', selectedStatus);
+        //   params.append('status', selectedStatus);
         // }
         // if (searchTerm) {
-        //   params.append('name', searchTerm);
+        //   params.append('name', searchTerm);
         // }
+        // // NEW SORTING PARAMETERS for backend sort
+        // params.append('sortBy', sortCriteria);
+        // params.append('sortOrder', sortOrder);
 
         // // Append parameters to the URL if they exist
         // if (params.toString()) {
-        //   apiUrl += `?${params.toString()}`;
+        //   apiUrl += `?${params.toString()}`;
         // }
 
         // // Example: Real fetch call
         // const response = await fetch(apiUrl);
 
         // if (!response.ok) {
-        //   throw new Error(`HTTP error! status: ${response.status}`);
+        //   throw new Error(`HTTP error! status: ${response.status}`);
         // }
         // const data = await response.json();
-        // setInterns(data); // Update state with fetched (and backend-filtered) data
+        // setInterns(data); // Update state with fetched (and backend-filtered/sorted) data
 
         // uncomment nalang ung sa taas para sa db setup
         // --- START OF SIMULATED DATA ---
@@ -100,7 +107,7 @@ const InternC = () => {
           },
           {
             studNo: '117', lastname: 'Aquino', firstname: 'Sarah', mi: 'K.', email: 'sarah@mail.net',
-            program: 'BSBA', adviser: 'Ms. Garcia', company: 'CCC', supervisor: 'Ms. Johnson', status: 'Pending'
+            program: 'BSBA', adviser: 'Ms. Garcia', company: 'CCC', supervisor: 'Ms. Johnson', status: 'Accepted'
           },
         ];
         // hanggang dito irereove kung may db na
@@ -118,7 +125,7 @@ const InternC = () => {
           if (selectedCompany !== 'All' && intern.company !== selectedCompany) {
             return false;
           }
-          // NEW FILTER: Status Filter
+          // Status Filter
           if (selectedStatus !== 'All' && intern.status !== selectedStatus) {
             return false;
           }
@@ -132,8 +139,32 @@ const InternC = () => {
           return true;
         });
 
-        setInterns(filteredInterns); // Update state with filtered sample data
+        // Apply client-side sorting for sample data (REMOVE THIS FOR REAL DB)
+        const sortedInterns = [...filteredInterns].sort((a, b) => {
+          let valueA = a[sortCriteria];
+          let valueB = b[sortCriteria];
+
+          // Handle numeric comparison for studNo
+          if (sortCriteria === 'studNo') {
+            valueA = parseInt(valueA, 10);
+            valueB = parseInt(valueB, 10);
+          } else {
+            // For string comparisons, make them case-insensitive
+            valueA = String(valueA).toLowerCase();
+            valueB = String(valueB).toLowerCase();
+          }
+
+          if (valueA < valueB) {
+            return sortOrder === 'asc' ? -1 : 1;
+          }
+          if (valueA > valueB) {
+            return sortOrder === 'asc' ? 1 : -1;
+          }
+          return 0;
+        });
         // --- END OF SIMULATED DATA ---
+
+        setInterns(sortedInterns); // Update state with filtered and sorted sample data
 
       } catch (err) {
         console.error("Failed to fetch interns:", err);
@@ -144,7 +175,7 @@ const InternC = () => {
     };
 
     fetchInterns(); // Call the fetch function
-  }, [selectedProgram, selectedCompany, selectedStatus, searchTerm]); // NEW DEPENDENCY: selectedStatus added
+  }, [selectedProgram, selectedCompany, selectedStatus, searchTerm, sortCriteria, sortOrder]);
 
   // Handler for program filter change
   const handleProgramChange = (event) => {
@@ -156,7 +187,7 @@ const InternC = () => {
     setSelectedCompany(event.target.value);
   };
 
-  // NEW HANDLER: For status filter change
+  // Handler for status filter change
   const handleStatusChange = (event) => {
     setSelectedStatus(event.target.value);
   };
@@ -166,7 +197,16 @@ const InternC = () => {
     setSearchTerm(event.target.value);
   };
 
-  // REMOVED: handlePendingInternsClick function is no longer needed.
+  // Handlers for sorting
+  const handleSortCriteriaChange = (event) => {
+    setSortCriteria(event.target.value);
+  };
+
+  // The handleSortOrderToggle function is no longer needed in the UI,
+  // but keeping it here for now in case you reintroduce a toggle later.
+  const handleSortOrderToggle = () => {
+    setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
+  };
 
   return (
     <div className="p-5 md:p-8 bg-gray-100 min-h-screen">
@@ -204,7 +244,7 @@ const InternC = () => {
               ))}
             </select>
 
-            {/* NEW FILTER: Status Filter */}
+            {/* Status Filter */}
             <select
               className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
               value={selectedStatus}
@@ -216,6 +256,21 @@ const InternC = () => {
                 </option>
               ))}
             </select>
+
+            {/* Sort By Dropdown */}
+            <select
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+              value={sortCriteria}
+              onChange={handleSortCriteriaChange}
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  Sort by {option.label}
+                </option>
+              ))}
+            </select>
+
+            {/* The Sort Order Toggle Button (and its icon) has been removed */}
 
             {/* Search Input */}
             <div className="relative">
@@ -311,8 +366,6 @@ const InternC = () => {
           </tbody>
         </table>
       </div>
-
-
     </div>
   );
 };

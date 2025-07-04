@@ -19,6 +19,7 @@ import ProfileC from './Pages/CoordinatorPages/ProfileC.jsx';
 // Placeholder dashboards for other roles (create these components or replace with real ones)
 import DashboardA from './Pages/AdviserPages/DashboardA.jsx';
 import InternA from './Pages/AdviserPages/InternA';
+import AddIntern from './Pages/AdviserPages/AddIntern';
 import CompaniesA from './Pages/AdviserPages/CompaniesA.jsx';
 import ReportsA from './Pages/AdviserPages/ReportsA';
 import ProfileA from './Pages/AdviserPages/ProfileA.jsx'; 
@@ -78,6 +79,7 @@ export default function App() {
 }>
     <Route path="dashboard" element={<DashboardA />} />
     <Route path="interns" element={<InternA />} />
+    <Route path="addintern" element={<AddIntern />} />
     <Route path="companies" element={<CompaniesA />} />
     <Route path="reports" element={<ReportsA />} />
     <Route path="profile" element={<ProfileA />} />

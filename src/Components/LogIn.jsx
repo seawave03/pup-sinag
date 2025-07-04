@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 const LogIn = () => {
   const navigate = useNavigate();
   const { role } = useParams();
+  const [showPassword, setShowPassword] = useState(false);
 
   const allowedRoles = ['coordinator', 'adviser', 'intern', 'supervisor'];
 
@@ -20,13 +21,15 @@ const LogIn = () => {
     localStorage.setItem('isLoggedIn', 'true');
     alert(`${capitalize(role)} logged in successfully!`);
 
-    // --- FIX STARTS HERE ---
     if (role === 'intern') {
-      navigate('/intern/home'); // Navigate intern to their 'home' route
+      navigate('/intern/home');
     } else {
-      navigate(`/${role}/dashboard`); // Other roles go to their 'dashboard'
+      navigate(`/${role}/dashboard`);
     }
-    // --- FIX ENDS HERE ---
+  };
+
+  const handleForgotPassword = () => {
+    navigate(`/forgot-password`);
   };
 
   const capitalize = (str) =>
@@ -49,11 +52,20 @@ const LogIn = () => {
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">Password</label>
-            <input
-              type="password"
-              required
-              className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-900"
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? 'text' : 'password'}
+                required
+                className="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-red-900 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-sm text-gray-600"
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
           </div>
           <button
             type="submit"
@@ -63,6 +75,13 @@ const LogIn = () => {
           </button>
         </form>
         <div className="mt-4 text-center">
+          <button
+            onClick={handleForgotPassword}
+            className="text-sm text-red-900 font-semibold hover:underline mb-2"
+          >
+            Forgot Password?
+          </button>
+
           <p className="text-sm text-gray-600">
             Don't have an account?{' '}
             <button
@@ -72,13 +91,6 @@ const LogIn = () => {
               Sign Up
             </button>
           </p>
-
-          <button
-            type="button"
-            className="mt-4 w-full bg-yellow-600 text-white py-2 rounded-md hover:bg-yellow-500 transition-colors"
-          >
-            Login with Gmail
-          </button>
         </div>
       </div>
     </div>

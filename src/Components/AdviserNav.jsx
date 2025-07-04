@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom'; // Import useNavigate for redirection
-import { User, LayoutDashboard, GraduationCap, BookOpen, Building, FileText, LogOut } from 'lucide-react'; // Import LogOut icon
+import { User, LayoutDashboard, GraduationCap, Plus, Building, FileText, LogOut } from 'lucide-react'; // Import LogOut icon
 
 const AdviserNav = () => {
   const navigate = useNavigate(); // Initialize useNavigate hook
@@ -8,9 +8,11 @@ const AdviserNav = () => {
   // Define the navigation items for the adviser
   const navItems = [
     { name: 'Dashboard', path: '/adviser/dashboard', icon: <LayoutDashboard size={20} /> },
-    { name: 'Interns', path: '/adviser/interns', icon: <GraduationCap size={20} /> },
+    { name: 'Interns Status', path: '/adviser/interns', icon: <GraduationCap size={20} /> },
+    { name: 'Add Intern', path: '/adviser/addintern', icon: <Plus size={20} /> },
     { name: 'Companies', path: '/adviser/companies', icon: <Building size={20} /> },
     { name: 'Reports', path: '/adviser/reports', icon: <FileText size={20} /> },
+    
   ];
 
   // Handler for logout functionality

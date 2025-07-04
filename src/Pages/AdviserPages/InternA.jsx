@@ -4,7 +4,7 @@ const InternA = () => {
   // State to store the list of interns
   const [interns, setInterns] = useState([]);
   // State for loading indicator
-  const [loading, setLoading] = useState(true); // Keep initial state as true
+  const [loading, setLoading] = useState(true);
   // State for error messages
   const [error, setError] = useState(null);
 
@@ -13,27 +13,32 @@ const InternA = () => {
   const [selectedStatus, setSelectedStatus] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
 
+  // New states for sorting
+  const [sortCriteria, setSortCriteria] = useState('lastname'); // Default sort by lastname
+  const [sortOrder, setSortOrder] = useState('asc'); // Default sort order ascending
+
   // Mock options for now:
   const companyOptions = ['All', 'AAA', 'BBB', 'CCC', 'DDD'];
   const statusOptions = ['All', 'Endorsed', 'Pending'];
+  const sortOptions = [
+    { label: 'Last Name', value: 'lastname' },
+    { label: 'First Name', value: 'firstname' },
+    { label: 'Student ID', value: 'studNo' },
+  ];
 
   // useEffect to fetch interns data
   useEffect(() => {
-    // The mock data setup and client-side filtering logic
-    // is placed directly inside useEffect or a function
-    // called within it, ensuring it runs on component mount
-    // and when dependencies change.
-
     const processInternsData = async () => {
-      setLoading(true); // Set loading to true at the start of data fetching/processing
+      setLoading(true);
       setError(null);
 
       try {
-        // --- START OF SIMULATED DATA & CLIENT-SIDE FILTERING (REMOVE THIS ENTIRE BLOCK FOR REAL DB) ---
         const mockInterns = [
           { studNo: '111', lastname: 'Dela Cruz', firstname: 'Juan', mi: 'S.', email: 'juan@gmail.com', program: 'BSIT', adviser: 'Mr. Dela Cruz', company: 'AAA', supervisor: 'Mrs. Cruz', status: 'Endorsed' },
           { studNo: '113', lastname: 'Santos', firstname: 'Pedro', mi: 'A.', email: 'pedro@mail.com', program: 'BSIT', adviser: 'Mr. Dela Cruz', company: 'CCC', supervisor: 'Ms. Johnson', status: 'Endorsed' },
           { studNo: '116', lastname: 'Tan', firstname: 'Michael', mi: 'J.', email: 'michael@email.com', program: 'BSIT', adviser: 'Mr. Dela Cruz', company: 'BBB', supervisor: 'Mr. Smith', status: 'Pending' },
+          { studNo: '105', lastname: 'Aquino', firstname: 'Maria', mi: 'L.', email: 'maria@example.com', program: 'BSCS', adviser: 'Ms. Reyes', company: 'DDD', supervisor: 'Mr. Brown', status: 'Endorsed' },
+          { studNo: '120', lastname: 'Lim', firstname: 'Kevin', mi: 'C.', email: 'kevin@test.com', program: 'BSIT', adviser: 'Mr. Garcia', company: 'AAA', supervisor: 'Ms. White', status: 'Pending' },
         ];
 
         // Simulate network delay
@@ -55,22 +60,39 @@ const InternA = () => {
           return true;
         });
 
-        setInterns(filteredInternsClientSide);
-        // --- END OF SIMULATED DATA & CLIENT-SIDE FILTERING ---
+        const sortedInterns = [...filteredInternsClientSide].sort((a, b) => {
+          let valueA = a[sortCriteria];
+          let valueB = b[sortCriteria];
+
+          if (sortCriteria === 'studNo') {
+            valueA = parseInt(valueA, 10);
+            valueB = parseInt(valueB, 10);
+          } else {
+            valueA = String(valueA).toLowerCase();
+            valueB = String(valueB).toLowerCase();
+          }
+
+          if (valueA < valueB) {
+            return sortOrder === 'asc' ? -1 : 1;
+          }
+          if (valueA > valueB) {
+            return sortOrder === 'asc' ? 1 : -1;
+          }
+          return 0;
+        });
+
+        setInterns(sortedInterns);
 
       } catch (err) {
         console.error("Failed to process interns data:", err);
         setError(err.message || "Failed to load interns. Please try again later.");
       } finally {
-        setLoading(false); // Set loading to false after data is processed (or an error occurs)
+        setLoading(false);
       }
     };
 
-    processInternsData(); // Call the function directly inside useEffect
-
-    // Dependencies: This useEffect will re-run whenever any of these filter states change.
-  }, [selectedCompany, selectedStatus, searchTerm]);
-
+    processInternsData();
+  }, [selectedCompany, selectedStatus, searchTerm, sortCriteria, sortOrder]);
 
   // Handlers for filter changes
   const handleCompanyChange = (event) => {
@@ -83,6 +105,17 @@ const InternA = () => {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  };
+
+  // Handlers for sort changes
+  const handleSortCriteriaChange = (event) => {
+    setSortCriteria(event.target.value);
+  };
+
+  // The handleSortOrderToggle function is no longer needed in the UI,
+  // but keeping it here for now in case you reintroduce a toggle later.
+  const handleSortOrderToggle = () => {
+    setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
   };
 
   return (
@@ -120,6 +153,25 @@ const InternA = () => {
                 </option>
               ))}
             </select>
+
+            {/* Sort By Dropdown */}
+            <select
+              className="px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+              value={sortCriteria}
+              onChange={handleSortCriteriaChange}
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  Sort by {option.label}
+                </option>
+              ))}
+            </select>
+
+            {/* Removed the Sort Order Toggle Button */}
+            {/* If you still want to offer both ASC/DESC, you might consider:
+                1. Adding another dropdown for sortOrder (Ascending/Descending)
+                2. Reinstating the button or integrating the toggle into the table header.
+            */}
 
             {/* Search Input */}
             <div className="relative">
@@ -174,19 +226,19 @@ const InternA = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {loading ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   Loading interns...
                 </td>
               </tr>
             ) : error ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 whitespace-nowrap text-center text-red-500">
+                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-red-500">
                   {error}
                 </td>
               </tr>
             ) : interns.length === 0 ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   No interns found matching your criteria.
                 </td>
               </tr>

@@ -1,161 +1,110 @@
 import React, { useState, useEffect } from 'react';
+import AddAdviser from './AddAdviser'; // Make sure the path is correct
 
 const AdviserC = () => {
-  // State to store the list of advisers
   const [advisers, setAdvisers] = useState([]);
-  // State for loading indicator
   const [loading, setLoading] = useState(true);
-  // State for error messages
   const [error, setError] = useState(null);
+  const [showAddAdviserForm, setShowAddAdviserForm] = useState(false);
 
-  // Simulated data fetching from a "database"
   useEffect(() => {
     const fetchAdvisers = async () => {
-      setLoading(true); // Set loading to true when fetching starts
-      setError(null);   // Clear any previous errors
+      setLoading(true);
+      setError(null);
 
       try {
-        // Simulate an API call with a delay
-        const response = await new Promise(resolve => setTimeout(() => {
-          // This is your simulated database data.
-          // In a real application, you would replace this with an actual fetch call
-          // to your backend API, e.g., fetch('/api/advisers').
-          const mockAdvisers = [
-            { id: '111', lastname: 'Dela Cruz', firstname: 'Juan', mi: 'S.', program: 'BSIT', email: 'juan.delacruz@gmail.com' },
-            { id: '112', lastname: 'Reyes', firstname: 'Maria', mi: 'L.', program: 'BSBA', email: 'maria.reyes@gmail.com' },
-            { id: '113', lastname: 'Santos', firstname: 'Pedro', mi: 'A.', program: 'BSENT', email: 'pedro.santos@gmail.com' },
-            { id: '114', lastname: 'Cruz', firstname: 'Ana', mi: 'M.', program: 'BEED', email: 'ana.cruz@gmail.com' },
-            { id: '115', lastname: 'Garcia', firstname: 'Jose', mi: 'P.', program: 'IND. ENG.', email: 'jose.garcia@gmail.com' },
-          ];
-          // hanggang dito remove para sa db
-          
-          resolve({ ok: true, json: () => Promise.resolve(mockAdvisers) });
-        }, 1000)); // Simulate 1 second loading time
+        const response = await new Promise(resolve =>
+          setTimeout(() => {
+            const mockAdvisers = [
+              { id: '111', lastname: 'Dela Cruz', firstname: 'Juan', mi: 'S.', program: 'BSIT', email: 'juan.delacruz@gmail.com' },
+              { id: '112', lastname: 'Reyes', firstname: 'Maria', mi: 'L.', program: 'BSBA', email: 'maria.reyes@gmail.com' },
+              { id: '113', lastname: 'Santos', firstname: 'Pedro', mi: 'A.', program: 'BSENT', email: 'pedro.santos@gmail.com' },
+              { id: '114', lastname: 'Cruz', firstname: 'Ana', mi: 'M.', program: 'BEED', email: 'ana.cruz@gmail.com' },
+              { id: '115', lastname: 'Garcia', firstname: 'Jose', mi: 'P.', program: 'IND. ENG.', email: 'jose.garcia@gmail.com' },
+            ];
+            resolve({ ok: true, json: () => Promise.resolve(mockAdvisers) });
+          }, 1000)
+        );
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
         const data = await response.json();
-        setAdvisers(data); // Update state with fetched data
-
+        setAdvisers(data);
       } catch (err) {
         console.error("Failed to fetch advisers:", err);
-        setError("Failed to load advisers. Please try again later."); // Set error message
+        setError("Failed to load advisers. Please try again later.");
       } finally {
-        setLoading(false); // Set loading to false once fetching is complete (success or error)
+        setLoading(false);
       }
     };
 
-    fetchAdvisers(); // Call the fetch function when the component mounts
-  }, []); // Empty dependency array means this effect runs once on mount
+    fetchAdvisers();
+  }, []);
 
-  // Handler for adding a new adviser (placeholder)
   const handleAddNewAdviser = () => {
-    // In a real application, this would open a modal or navigate to a new form
-    // to add a new adviser. For now, it just logs to the console.
-    console.log("Add new adviser button clicked!");
-    // You would typically navigate to an add form or open a modal here
-    // For example: navigate('/advisers/new');
-    alert("Functionality to add a new adviser would go here!");
+    setShowAddAdviserForm(true);
   };
 
-  // Handler for removing an adviser (placeholder)
   const handleRemoveAdviser = (id) => {
-    // In a real application, this would send a DELETE request to your API
-    // and then update the state to remove the adviser from the list.
-    console.log(`Remove adviser with ID: ${id}`);
     const isConfirmed = window.confirm(`Are you sure you want to remove adviser with ID: ${id}?`);
     if (isConfirmed) {
-      // Simulate removal from DB and then update UI
-      setAdvisers(prevAdvisers => prevAdvisers.filter(adviser => adviser.id !== id));
+      setAdvisers(prev => prev.filter(adviser => adviser.id !== id));
       alert(`Adviser ${id} removed (simulated).`);
     }
   };
 
   return (
     <div className="p-5 md:p-8 bg-gray-100 min-h-screen">
-      {/* Page Header */}
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-gray-800">Programs Advisers</h1>
         <p className="text-gray-600 text-sm">List of Program Advisers</p>
       </div>
 
-      {/* Advisers Table Container */}
       <div className="bg-white rounded-lg shadow-md border border-gray-300 overflow-hidden">
         <table className="min-w-full divide-y divide-gray-300">
           <thead className="bg-red-800">
             <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider rounded-tl-lg">
-                ID no.
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
-                Lastname
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
-                Firstname
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
-                MI.
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
-                Program
-              </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
-                Email
-              </th>
-              <th scope="col" className="px-6 py-3 text-center text-xs font-bold text-white uppercase tracking-wider rounded-tr-lg">
-                REMOVE
-              </th>
+              {['ID no.', 'Lastname', 'Firstname', 'MI.', 'Program', 'Email', 'REMOVE'].map((title, idx) => (
+                <th
+                  key={idx}
+                  scope="col"
+                  className={`px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider ${
+                    idx === 0 ? 'rounded-tl-lg' : idx === 6 ? 'text-center rounded-tr-lg' : ''
+                  }`}
+                >
+                  {title}
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-gray-200">
             {loading ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
-                  Loading advisers...
-                </td>
+                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">Loading advisers...</td>
               </tr>
             ) : error ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 whitespace-nowrap text-center text-red-500">
-                  {error}
-                </td>
+                <td colSpan="7" className="px-6 py-4 text-center text-red-500">{error}</td>
               </tr>
             ) : advisers.length === 0 ? (
               <tr>
-                <td colSpan="7" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
-                  No advisers found.
-                </td>
+                <td colSpan="7" className="px-6 py-4 text-center text-gray-500">No advisers found.</td>
               </tr>
             ) : (
-              advisers.map((adviser) => (
+              advisers.map(adviser => (
                 <tr key={adviser.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {adviser.id}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {adviser.lastname}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {adviser.firstname}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {adviser.mi}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {adviser.program}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {adviser.email}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
+                  <td className="px-6 py-4 text-sm text-gray-900">{adviser.id}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{adviser.lastname}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{adviser.firstname}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{adviser.mi}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{adviser.program}</td>
+                  <td className="px-6 py-4 text-sm text-gray-900">{adviser.email}</td>
+                  <td className="px-6 py-4 text-center text-sm font-medium">
                     <button
                       onClick={() => handleRemoveAdviser(adviser.id)}
                       className="text-red-600 hover:text-red-900 transition-colors duration-200"
                       aria-label={`Remove adviser ${adviser.firstname} ${adviser.lastname}`}
                     >
-                      {/* Trash Can Icon (SVG) */}
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         className="h-5 w-5 mx-auto"
@@ -177,7 +126,6 @@ const AdviserC = () => {
         </table>
       </div>
 
-      {/* Add New Adviser Button */}
       <div className="mt-8 flex justify-end">
         <button
           onClick={handleAddNewAdviser}
@@ -186,6 +134,21 @@ const AdviserC = () => {
           Add new Adviser
         </button>
       </div>
+
+      {/* Add Adviser Modal */}
+      {showAddAdviserForm && (
+        <div className="fixed inset-0 bg-red-900  bg-opacity-50 flex items-center justify-center z-50">
+          
+            <AddAdviser
+              onAddSuccess={(newAdviser) => {
+                setAdvisers(prev => [...prev, newAdviser]);
+                setShowAddAdviserForm(false);
+              }}
+              onCancel={() => setShowAddAdviserForm(false)}
+            />
+          
+        </div>
+      )}
     </div>
   );
 };

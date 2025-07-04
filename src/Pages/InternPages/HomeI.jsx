@@ -10,19 +10,10 @@ const HomeI = () => {
     awaitingApproval: false,
     internshipOngoing: false,
     documents: [
-      { name: 'Certificate of Good Moral', uploaded: true, file: 'good_moral.pdf' },
-      { name: 'Medical Certificate', uploaded: false, file: null },
-      { name: 'Resume / CV', uploaded: true, file: 'resume_cv.pdf' },
-      { name: 'Insurance', uploaded: false, file: null },
+      { name: 'Medical Certificate', uploaded: false, file: null, remarks: 'Please ensure the certificate is signed by a licensed physician.' },
+      { name: 'Resume / CV', uploaded: true, file: 'resume_cv.pdf', remarks: 'Your OJT Coordinator approved your resume.' },
+      { name: 'Insurance', uploaded: false, file: null, remarks: 'Kindly upload your insurance policy before the internship start date.' },
       // Add more documents as needed, following the format
-    ],
-    upcomingTasks: [
-      { id: 1, description: 'Submit weekly report', dueDate: 'June 22, 2025' },
-      { id: 2, description: 'Midterm evaluation', dueDate: 'July 1, 2025' },
-    ],
-    messages: [
-      { id: 1, text: 'Your OJT Coordinator approved your resume.', type: 'info' },
-      { id: 2, text: 'Please upload your MOA before June 21.', type: 'warning' },
     ],
     companyDetails: {
       companyName: 'XYZ Corp',
@@ -186,73 +177,42 @@ const HomeI = () => {
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Required Documents</h3>
           <ul className="space-y-3">
             {internData.documents.map((doc, index) => (
-              <li key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-md border border-gray-200">
-                <span className="text-gray-700">
-                  {doc.uploaded ? <span className="text-green-600 mr-2">✓</span> : <span className="text-red-600 mr-2">✗</span>}
-                  {doc.name}
-                </span>
-                <div className="space-x-2">
-                  {doc.uploaded && doc.file && (
-                    <button
-                      onClick={() => handleFileView(doc.file)}
-                      className="text-blue-600 hover:underline text-sm px-3 py-1 rounded-md border border-blue-600 hover:bg-blue-50 transition-colors"
-                    >
-                      View
-                    </button>
-                  )}
-                  {!doc.uploaded && (
-                    <button
-                      onClick={() => handleFileUpload(doc.name)}
-                      className="bg-red-800 hover:bg-red-700 text-white text-sm px-3 py-1 rounded-md shadow transition-colors"
-                    >
-                      Upload
-                    </button>
-                  )}
+              <li key={index} className="p-3 bg-gray-50 rounded-md border border-gray-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-gray-700">
+                    {doc.uploaded ? <span className="text-green-600 mr-2">✓</span> : <span className="text-red-600 mr-2">✗</span>}
+                    {doc.name}
+                  </span>
+                  <div className="space-x-2">
+                    {doc.uploaded && doc.file && (
+                      <button
+                        onClick={() => handleFileView(doc.file)}
+                        className="text-blue-600 hover:underline text-sm px-3 py-1 rounded-md border border-blue-600 hover:bg-blue-50 transition-colors"
+                      >
+                        View
+                      </button>
+                    )}
+                    {!doc.uploaded && (
+                      <button
+                        onClick={() => handleFileUpload(doc.name)}
+                        className="bg-red-800 hover:bg-red-700 text-white text-sm px-3 py-1 rounded-md shadow transition-colors"
+                      >
+                        Upload
+                      </button>
+                    )}
+                  </div>
                 </div>
+                {doc.remarks && (
+                  <p className="text-sm text-gray-600 mt-2 italic">Remarks: {doc.remarks}</p>
+                )}
               </li>
             ))}
           </ul>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* 4. Upcoming Deadlines or Tasks */}
-          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Upcoming Deadlines & Tasks</h3>
-            {internData.upcomingTasks.length > 0 ? (
-              <ul className="space-y-3">
-                {internData.upcomingTasks.map(task => (
-                  <li key={task.id} className="p-3 bg-blue-50 border border-blue-200 rounded-md">
-                    <p className="text-gray-800 font-medium">{task.description}</p>
-                    <p className="text-sm text-blue-700">Due: {task.dueDate}</p>
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500 italic">No upcoming tasks.</p>
-            )}
-          </div>
+        {/* The "grid grid-cols-1 md:grid-cols-2 gap-8" container is now removed since it only held "Upcoming Deadlines & Tasks" */}
 
-          {/* 5. Messages or Notifications */}
-          <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
-            <h3 className="text-xl font-semibold text-gray-800 mb-4">Messages & Notifications</h3>
-            {internData.messages.length > 0 ? (
-              <ul className="space-y-3">
-                {internData.messages.map(msg => (
-                  <li
-                    key={msg.id}
-                    className={`p-3 rounded-md ${msg.type === 'warning' ? 'bg-orange-50 border border-orange-200 text-orange-800' : 'bg-green-50 border border-green-200 text-green-800'}`}
-                  >
-                    {msg.text}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p className="text-gray-500 italic">No new messages.</p>
-            )}
-          </div>
-        </div>
-
-        {/* 6. Internship Details */}
+        {/* Internship Details */}
         <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
           <h3 className="text-xl font-semibold text-gray-800 mb-4">Internship Details</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-700">
@@ -266,7 +226,6 @@ const HomeI = () => {
             </div>
             <div className="col-span-1 md:col-span-2">
               <p><span className="font-medium">Hours Required:</span> {internData.companyDetails.hoursRequired} hrs</p>
-              <p><span className="font-medium">Hours Logged (Current):</span> {internData.companyDetails.currentHours} hrs</p>
             </div>
           </div>
         </div>

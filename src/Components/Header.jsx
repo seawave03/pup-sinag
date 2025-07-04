@@ -1,23 +1,24 @@
 // src/Header.jsx
-import PUP_MBC_WT from '../assets/PUP_MBC_WT.png';
+import pup_1904 from '../assets/pup_1904.png';
 
 function Header() {
   return (
     <header className="flex items-start p-4 bg-red-900 shadow-md">
       {/* Logo */}
-      <img src={PUP_MBC_WT} alt="PUP Logo" className="w-16 h-16 mr-4" />
+      <img src={pup_1904} alt="PUP Logo" className="w-16 h-16 mr-4" />
 
       {/* Text block */}
       <div className="text-white text-left leading-tight">
         <h1 className="text-lg font-bold">
-           Polytechnic University of the Philippines - Mariveles, Bataan Campus
+           Polytechnic University of the Philippines
         </h1>
-        <h3 className="text-sm font-semibold">
-         PUP System for Internship Navigation and Guidance(SINAG)
-        </h3>
         <h6 className="text-xs italic">
           The Country's 1st PolytechnicU
         </h6>
+        <h3 className="text-sm font-semibold">
+         PUP System for Internship Navigation and Guidance (SINAG)
+        </h3>
+        
       </div>
     </header>
   );
