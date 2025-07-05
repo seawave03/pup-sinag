@@ -10,10 +10,10 @@ const NavigationBtn = () => {
   const navigate = useNavigate();
 
 const buttons = [
-  { label: 'Coordinator', path: '/login/coordinator', img: coordinator },
-  { label: 'Adviser', path: '/login/adviser', img: adviser },
-  { label: 'Intern', path: '/login/intern', img: intern },
-  { label: 'Supervisor', path: '/login/supervisor', img: supervisor },
+    { label: 'Coordinator', path: '/pup-sinag/login/coordinator', img: coordinator },
+    { label: 'Adviser', path: '/pup-sinag/login/adviser', img: adviser },
+    { label: 'Intern', path: '/pup-sinag/login/intern', img: intern },
+    { label: 'Supervisor', path: '/pup-sinag/login/supervisor', img: supervisor },
 ];
 
 
