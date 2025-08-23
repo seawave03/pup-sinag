@@ -1,31 +1,34 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import SignUp from '../Components/SignUp';
 
 const LogIn = () => {
   const navigate = useNavigate();
   const { role } = useParams();
   const [showPassword, setShowPassword] = useState(false);
-
+{/*}
   const allowedRoles = ['coordinator', 'adviser', 'intern', 'supervisor'];
 
-  if (!allowedRoles.includes(role)) {
+  if (!allowedRoles.includes) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-xl text-red-600 font-semibold">Invalid user role.</p>
       </div>
     );
-  }
+}
+    */}
+  
 
   const handleLogin = (e) => {
     e.preventDefault();
     localStorage.setItem('isLoggedIn', 'true');
-    alert(`${capitalize(role)} logged in successfully!`);
-
+    setMessage(`${capitalize(role)} logged in successfully!`);
+{/*
     if (role === 'intern') {
       navigate('/intern/home');
     } else {
       navigate(`/${role}/dashboard`);
-    }
+    }*/}
   };
 
   const handleForgotPassword = () => {
@@ -37,9 +40,9 @@ const LogIn = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-200">
-      <div className="bg-white p-8 rounded-xl shadow-xl w-full max-w-md mb-20">
+      <div className="bg-white p-20 rounded-xl shadow-xl w-full max-w-md mb-20">
         <h1 className="text-2xl font-bold text-red-900 mb-6 text-center">
-          {capitalize(role)} Login
+          {capitalize} Login your Account
         </h1>
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
@@ -85,7 +88,7 @@ const LogIn = () => {
           <p className="text-sm text-gray-600">
             Don't have an account?{' '}
             <button
-              onClick={() => navigate(`/signup/${role}`)}
+              onClick={() => navigate(`/signup`)}
               className="text-red-900 font-semibold hover:underline"
             >
               Sign Up

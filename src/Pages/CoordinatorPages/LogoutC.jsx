@@ -1,5 +1,4 @@
 import React from 'react';
-import CoordinatorNav from '../../Components/CoordinatorNav';
 
 const LogoutC = () => {
   return (

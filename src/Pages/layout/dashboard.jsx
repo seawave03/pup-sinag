@@ -1,11 +1,11 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
-import CoordinatorNav from '../../Components/CoordinatorNav';
+import CoordinatorLayout from './CoordinatorLayout';
 
 const DashboardLayout = () => {
   return (
     <>
-      <CoordinatorNav />
+      <CoordinatorLayout /> 
       <Outlet />
     </>
   );
