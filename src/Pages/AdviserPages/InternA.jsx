@@ -19,7 +19,7 @@ const InternA = () => {
 
   // Mock options for now:
   const companyOptions = ['All', 'AAA', 'BBB', 'CCC', 'DDD'];
-  const statusOptions = ['All', 'Endorsed', 'Pending'];
+  const statusOptions = ['All', 'Endorsed', 'Pending', 'Accepted'];
   const sortOptions = [
     { label: 'Last Name', value: 'lastname' },
     { label: 'First Name', value: 'firstname' },
@@ -112,8 +112,6 @@ const InternA = () => {
     setSortCriteria(event.target.value);
   };
 
-  // The handleSortOrderToggle function is no longer needed in the UI,
-  // but keeping it here for now in case you reintroduce a toggle later.
   const handleSortOrderToggle = () => {
     setSortOrder(prevOrder => (prevOrder === 'asc' ? 'desc' : 'asc'));
   };
@@ -167,13 +165,7 @@ const InternA = () => {
               ))}
             </select>
 
-            {/* Removed the Sort Order Toggle Button */}
-            {/* If you still want to offer both ASC/DESC, you might consider:
-                1. Adding another dropdown for sortOrder (Ascending/Descending)
-                2. Reinstating the button or integrating the toggle into the table header.
-            */}
-
-            {/* Search Input */}
+           
             <div className="relative">
               <input
                 type="text"
