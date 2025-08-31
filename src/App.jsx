@@ -11,6 +11,7 @@ import CoordinatorLayout from './Pages/layout/CoordinatorLayout';
 
 import AdviserC from './Pages/CoordinatorPages/AdviserC';
 import CompaniesC from './Pages/CoordinatorPages/CompaniesC';
+import AddNewCompany from './Pages/CoordinatorPages/AddNewCompany';
 import DashboardC from './Pages/CoordinatorPages/DashboardC';
 import InternC from './Pages/CoordinatorPages/InternC';
 import ProgramsC from './Pages/CoordinatorPages/ProgramsC';
@@ -55,6 +56,7 @@ export default function App() {
             <Route path="interns" element={<InternC />} />
             <Route path="programs" element={<ProgramsC />} />
             <Route path="companies" element={<CompaniesC />} />
+            <Route path="newcompany" element={<AddNewCompany />} />
             <Route path="reports" element={<ReportsC />} />
             <Route path="profile" element={<ProfileC />} />
           </Route>

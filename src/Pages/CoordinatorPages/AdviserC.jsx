@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import AddAdviser from './AddAdviser'; // Make sure the path is correct
+import AddAdviser from './AddAdviser'; 
 
 const AdviserC = () => {
   const [advisers, setAdvisers] = useState([]);

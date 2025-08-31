@@ -1,96 +1,133 @@
 import React, { useState, useEffect } from 'react';
+import { formatDistanceStrict, differenceInDays, isBefore } from 'date-fns';
+import AddNewCompany from './AddNewCompany'; 
+import UpdateMoa from './UpdateMOA';
+
 
 const CompaniesC = () => {
-  // State to store the list of companies
   const [companies, setCompanies] = useState([]);
-  // State for loading indicator
   const [loading, setLoading] = useState(true);
-  // State for error messages
   const [error, setError] = useState(null);
-  // State for search term
   const [searchTerm, setSearchTerm] = useState('');
+  const [showAddNewCompanyForm, setShowAddNewCompanyForm] = useState(false);
+  const [showUpdateConfirm, setShowUpdateConfirm] = useState(false);
+  const [showUpdateForm, setShowUpdateForm] = useState(false);
+  const [selectedCompany, setSelectedCompany] = useState(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [companyToDelete, setCompanyToDelete] = useState(null);
 
-  // Simulated data fetching from a "database"
-  // This useEffect will re-run when the search term changes
+// delete from here to removed mock data
   useEffect(() => {
     const fetchCompanies = async () => {
-      setLoading(true); // Set loading to true when fetching starts
-      setError(null);   // Clear any previous errors
+      setLoading(true); 
+      setError(null);   
 
       try {
-        // TODO: Database Connection Point 1: Replace this simulated API call.
-        // This is where you will make your actual API request to your backend.
-        // Example: let apiUrl = '/api/companies';
-        // if (searchTerm) {
-        //   apiUrl += `?name=${encodeURIComponent(searchTerm)}`; // Pass search term to backend
-        // }
-        // const response = await fetch(apiUrl);
-        // if (!response.ok) {
-        //   throw new Error(`HTTP error! status: ${response.status}`);
-        // }
-        // const data = await response.json();
-        // setCompanies(data); // Update state with fetched and backend-filtered data
+  
+     const mockCompanies = [
+  { no: '001', name: 'AAA', email: 'aaa@gmail.com', supervisor: 'Mrs. Cruz', address: '.st.', moa: '.pdf', natureOfBusiness: 'Manufacturing', MOAStart: '2022-01-01', MOAEnd: '2025-01-01' },
+  { no: '002', name: 'BBB Corp', email: 'info@bbbcorp.com', supervisor: 'Mr. Smith', address: '123 Main St.', moa: 'bbb_moa.pdf', natureOfBusiness: 'Corporate', MOAStart: '2021-03-01', MOAEnd: '2024-03-01' },
+  { no: '003', name: 'XYZ Innovations', email: 'contact@xyz.net', supervisor: 'Ms. Johnson', address: '456 Min. Ave.', moa: 'xyz_agreement.pdf', natureOfBusiness: 'Technology', MOAStart: '2020-05-01', MOAEnd: '2025-05-01' },
+  { no: '004', name: 'Global Tech', email: 'support@globaltech.org', supervisor: 'Dr. Lee', address: '789 Lopez Ln.', moa: 'global_tech_moa.pdf', natureOfBusiness: 'IT Services', MOAStart: '2023-07-01', MOAEnd: '2024-07-01' },
+  { no: '005', name: 'Creative Hub', email: 'hello@creativehub.com', supervisor: 'Mr. Davis', address: '101 Que. St.', moa: 'creative_moa.pdf', natureOfBusiness: 'Creative Agency', MOAStart: '2022-09-01', MOAEnd: '2024-09-01' },
+];
 
-
-        // --- START OF SIMULATED DATA ---
-        // TODO: Database Connection Point 2: Remove this mock data and filtering
-        // when you uncomment and use your real backend API.
-        const mockCompanies = [
-          { no: '001', name: 'AAA', email: 'aaa@gmail.com', supervisor: 'Mrs. Cruz', address: '.st.', moa: '.pdf', natureOfBusiness: 'Manufacturing', moaValidity: '3 years' },
-          { no: '002', name: 'BBB Corp', email: 'info@bbbcorp.com', supervisor: 'Mr. Smith', address: '123 Main St.', moa: 'bbb_moa.pdf', natureOfBusiness: 'Corporate', moaValidity: '2 years' },
-          { no: '003', name: 'XYZ Innovations', email: 'contact@xyz.net', supervisor: 'Ms. Johnson', address: '456 Min. Ave.', moa: 'xyz_agreement.pdf', natureOfBusiness: 'Technology', moaValidity: '5 years' },
-          { no: '004', name: 'Global Tech', email: 'support@globaltech.org', supervisor: 'Dr. Lee', address: '789 Lopez Ln.', moa: 'global_tech_moa.pdf', natureOfBusiness: 'IT Services', moaValidity: '1 year' },
-          { no: '005', name: 'Creative Hub', email: 'hello@creativehub.com', supervisor: 'Mr. Davis', address: '101 Que. St.', moa: 'creative_moa.pdf', natureOfBusiness: 'Creative Agency', moaValidity: '2 years' },
-        ];
-
-        // Simulate network delay
         await new Promise(resolve => setTimeout(resolve, 800));
 
-        // Apply client-side filtering for sample data (REMOVE THIS FOR REAL DB)
-        let filteredCompanies = mockCompanies.filter(company => {
-          if (searchTerm) {
-            return (
-              company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+           const filteredCompanies = mockCompanies.filter(company =>
+          searchTerm
+            ? company.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
               company.natureOfBusiness.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-          }
-          return true;
-        });
+            : true
+        );
 
         setCompanies(filteredCompanies); // Update state with filtered sample data
-        // --- END OF SIMULATED DATA ---
-
       } catch (err) {
         console.error("Failed to fetch companies:", err);
         setError("Failed to load companies. Please try again later."); // Set error message
       } finally {
         setLoading(false); // Set loading to false once fetching is complete
       }
-    };
+      };
 
-    fetchCompanies(); // Call the fetch function
-  }, [searchTerm]); // Re-run effect when search term changes
+     fetchCompanies(); // Call the fetch function
+     }, [searchTerm]); // Re-run effect when search term changes
+     //delete hanggang dito to remove unng mock data
 
-  // Handler for search input change
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+{/* uncomment for real backend
+     useEffect(() => {
+  const fetchCompanies = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      let apiUrl = '/api/companies'; 
+
+      if (searchTerm) {
+        apiUrl += `?q=${encodeURIComponent(searchTerm)}`; // pass search term as query
+      }
+
+      const response = await fetch(apiUrl);
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+
+      setCompanies(data); // ✅ backend supplies the filtered data
+    } catch (err) {
+      console.error("Failed to fetch companies:", err);
+      setError(err.message || "Failed to load companies. Please try again later.");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  // Handler for "Edit MOA" button (placeholder)
-  const handleEditMoa = () => {
-    console.log("Edit MOA button clicked!");
-    // TODO: Navigation/Action Point 3:
-    // This would likely open a modal or navigate to a page for editing MOA documents.
-    alert("Functionality to edit MOA would go here!");
-  };
+  fetchCompanies();
+}, [searchTerm]);
+*/}
+    
+const computeMoaStatus = (start, end) => {
+  if (!start || !end) return { validity: "N/A", warning: "" };
 
-  // Handler for "Add new Company" button (placeholder)
-  const handleAddCompany = () => {
-    console.log("Add new Company button clicked!");
-    // TODO: Navigation/Action Point 4:
-    // This would likely open a modal or navigate to a form for adding a new company.
-    alert("Functionality to add a new company would go here!");
-  };
+  const startDate = new Date(start);
+  const endDate = new Date(end);
+  const today = new Date();
+
+  const validity = formatDistanceStrict(endDate, startDate);
+
+  const daysLeft = differenceInDays(endDate, today);
+
+  let warning = "";
+  if (isBefore(endDate, today)) {
+    warning = "MOA expired";
+  } else if (daysLeft <= 30) {
+    warning = `MOA expiring in ${daysLeft} days`;
+  }
+
+  return { validity, warning };
+};
+
+  const handleSearchChange = (event) => {setSearchTerm(event.target.value);};
+  const handleEditMoa = () => {console.log("Update MOA button clicked!"); };
+  const handleAddNewCompany = () => setShowAddNewCompanyForm(true);
+
+  const handleDeleteClick = (company) => {
+  setCompanyToDelete(company);
+  setShowDeleteConfirm(true);
+};
+
+const handleConfirmDelete = () => {
+  if (companyToDelete) {
+    setCompanies((prev) =>
+      prev.filter((c) => c.no !== companyToDelete.no)
+    );
+  }
+  setShowDeleteConfirm(false);
+  setCompanyToDelete(null);
+};
+
 
   return (
     <div className="p-5 md:p-8 bg-gray-100 min-h-screen">
@@ -105,13 +142,7 @@ const CompaniesC = () => {
           <div className="flex flex-wrap items-center gap-3 justify-end w-full sm:w-auto">
             {/* Action Buttons */}
             <button
-              onClick={handleEditMoa}
-              className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md shadow-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-sm"
-            >
-              Edit MOA
-            </button>
-            <button
-              onClick={handleAddCompany}
+              onClick={handleAddNewCompany}
               className="bg-red-800 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md shadow-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 text-sm"
             >
               Add new Company
@@ -120,7 +151,7 @@ const CompaniesC = () => {
             <div className="relative">
               <input
                 type="text"
-                placeholder="Search company name or nature" 
+                placeholder="Search company name" 
                 className="pl-4 pr-10 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm w-full"
                 value={searchTerm}
                 onChange={handleSearchChange}
@@ -140,6 +171,9 @@ const CompaniesC = () => {
         <table className="min-w-full divide-y divide-gray-300">
           <thead className="bg-red-800">
             <tr>
+              <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">
+              Actions
+              </th>
               <th scope="col" className="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider rounded-tl-lg">
                 No.
               </th>
@@ -169,51 +203,180 @@ const CompaniesC = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {loading ? (
               <tr>
-                {/* Updated colSpan from 6 to 8 */}
-                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+            
+                <td colSpan="10" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   Loading companies...
                 </td>
               </tr>
+              
             ) : error ? (
               <tr>
-                {/* Updated colSpan from 6 to 8 */}
-                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-red-500">
+            
+                <td colSpan="10" className="px-6 py-4 whitespace-nowrap text-center text-red-500">
                   {error}
                 </td>
               </tr>
+
             ) : companies.length === 0 ? (
               <tr>
-                {/* Updated colSpan from 6 to 8 */}
-                <td colSpan="8" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
+             
+                <td colSpan="10" className="px-6 py-4 whitespace-nowrap text-center text-gray-500">
                   No companies found matching your criteria.
                 </td>
               </tr>
             ) : (
-              companies.map((company) => (
-                <tr key={company.no}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.no}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.supervisor}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.address}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.natureOfBusiness}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.moaValidity}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {/* Render MOA as a clickable link if it's a path, or just text */}
-                    {company.moa ? (
-                      <a href={company.moa} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
-                        {company.moa}
-                      </a>
-                    ) : (
-                      'N/A'
-                    )}
-                  </td>
-                </tr>
-              ))
+companies.map((company, index) => (
+  <tr key={company.no || index}>
+    {/* Delete button column */}
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+      <button
+        onClick={() => handleDeleteClick(company)}
+        className="bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-md text-xs"
+      >
+        Delete
+      </button>
+    </td>
+ <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{index + 1}</td>
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.name}</td>
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.email}</td>
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.supervisor}</td>
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.address}</td>
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{company.natureOfBusiness}</td>
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+      {(() => {
+        const { validity, warning } = computeMoaStatus(company.MOAStart, company.MOAEnd);
+        return (
+          <>
+            {validity}
+            {warning && (
+              <button
+                onClick={() => {
+                  setSelectedCompany(company);
+                  setShowUpdateConfirm(true); 
+                }}
+                className={`ml-2 text-xs font-semibold px-2 py-1 rounded transition-colors duration-200 ${
+                  warning.includes("expired")
+                    ? "bg-red-200 text-red-800 hover:bg-red-300"
+                    : "bg-yellow-200 text-yellow-800 hover:bg-yellow-300"
+                }`}
+              >
+                {warning}
+              </button>
+            )}
+          </>
+        );
+      })()}
+    </td>
+
+    {/* MOA Link */}
+    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+      {company.moa ? (
+        <a
+          href={company.moa}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline"
+        >
+          {company.moa}
+        </a>
+      ) : (
+        "N/A"
+      )}
+    </td>
+  </tr>
+))
+
             )}
           </tbody>
         </table>
+
+        {showDeleteConfirm && companyToDelete && (
+  <div className="fixed inset-0 bg-red-900 bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 w-80">
+      <h2 className="text-lg font-bold text-gray-800 mb-4">Delete Company</h2>
+      <p className="text-gray-600 mb-6">
+        Are you sure you want to delete{" "}
+        <span className="font-semibold">{companyToDelete.name}</span>?
+      </p>
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setShowDeleteConfirm(false)}
+          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleConfirmDelete}
+          className="px-4 py-2 bg-red-800 hover:bg-red-700 text-white rounded-md"
+        >
+          Delete
+        </button>
       </div>
+    </div>
+  </div>
+)}
+
+
+{/* Confirmation Modal */}
+{showUpdateConfirm && selectedCompany && (
+  <div className="fixed inset-0 bg-red-900 bg-opacity-40 flex items-center justify-center z-50">
+    <div className="bg-white rounded-lg shadow-lg p-6 w-80">
+      <h2 className="text-lg font-bold text-gray-800 mb-4">Update MOA</h2>
+      <p className="text-gray-600 mb-6">
+        Do you want to update MOA for{" "}
+        <span className="font-semibold">{selectedCompany.name}</span>?
+      </p>
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setShowUpdateConfirm(false)}
+          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-md"
+        >
+          No
+        </button>
+        <button
+          onClick={() => {
+            setShowUpdateConfirm(false); 
+            setShowUpdateForm(true);    
+          }}
+          className="px-4 py-2 bg-red-800 hover:bg-red-700 text-white rounded-md"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+)}
+
+{/* Update MOA Modal */}
+{showUpdateForm && selectedCompany && (
+  <div className="fixed inset-0 bg-red-900 bg-opacity-50 flex items-center justify-center z-50">
+    <UpdateMoa
+      company={selectedCompany}
+      onCancel={() => setShowUpdateForm(false)}
+      onUpdateSuccess={(updatedCompany) => {
+        setCompanies((prev) =>
+          prev.map((c) => (c.no === updatedCompany.no ? updatedCompany : c))
+        );
+        setShowUpdateForm(false);
+      }}
+    />
+  </div>
+)}
+
+
+      </div>
+      {/* Add New Company Modal */}
+      {showAddNewCompanyForm && (
+        <div className="fixed inset-0 bg-red-900 bg-opacity-50 flex items-center justify-center z-50">
+          <AddNewCompany
+            onAddSuccess={(newCompany) => {
+              setCompanies((prev) => [...prev, newCompany]);
+              setShowAddNewCompanyForm(false);
+            }}
+            onCancel={() => setShowAddNewCompanyForm(false)}
+          />
+        </div>
+      )}
     </div>
   );
 };
