@@ -51,6 +51,7 @@ export default function App() {
 
           {/* Coordinator Routes */}
           <Route path="coordinator" element={<CoordinatorLayout />}>
+          <Route index element={<DashboardC />} />
             <Route path="dashboard" element={<DashboardC />} />
             <Route path="adviser" element={<AdviserC />} />
             <Route path="interns" element={<InternC />} />
